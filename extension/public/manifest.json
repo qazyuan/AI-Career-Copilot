@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "AI Career Copilot",
+  "description": "AI assistant for analyzing jobs, resumes, matching, and interview preparation.",
+  "version": "0.0.1",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "AI Career Copilot"
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "assets/serviceWorker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["assets/contentScript.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": []
+}
