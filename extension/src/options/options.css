@@ -45,15 +45,156 @@ h2 {
 
 .settings-panel {
   display: grid;
-  gap: 8px;
+  gap: 24px;
   border: 1px solid #dbe3ef;
   border-radius: 8px;
   background: #ffffff;
-  padding: 20px;
+  padding: 24px;
 }
 
-.settings-panel p {
+.panel-heading {
+  display: grid;
+  gap: 8px;
+}
+
+.settings-panel p,
+.security-note,
+.save-status {
   margin: 0;
   color: #4b5563;
   line-height: 1.5;
+}
+
+.settings-form {
+  display: grid;
+  gap: 18px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+input,
+select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+  font-size: 15px;
+  padding: 9px 11px;
+}
+
+input:focus,
+select:focus {
+  border-color: #2563eb;
+  outline: 3px solid rgba(37, 99, 235, 0.14);
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+}
+
+button {
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.primary-button {
+  min-height: 40px;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 9px 16px;
+}
+
+.secondary-button {
+  min-width: 68px;
+  background: #eef2f7;
+  color: #1f2937;
+  padding: 9px 12px;
+}
+
+.advanced-settings {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 4px;
+}
+
+.advanced-settings summary {
+  cursor: pointer;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 650;
+  padding: 10px 0;
+}
+
+.advanced-settings .field {
+  padding-top: 8px;
+}
+
+.security-note {
+  border-radius: 6px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 13px;
+  padding: 12px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.save-status {
+  font-size: 14px;
+}
+
+.save-status-saved {
+  color: #047857;
+}
+
+.save-status-error {
+  color: #b91c1c;
+}
+
+.loading-state {
+  border-radius: 6px;
+  background: #f8fafc;
+  padding: 14px;
+}
+
+@media (max-width: 640px) {
+  .options-shell {
+    padding: 24px 16px;
+  }
+
+  .settings-panel {
+    padding: 18px;
+  }
+
+  .input-row {
+    grid-template-columns: 1fr;
+  }
 }
