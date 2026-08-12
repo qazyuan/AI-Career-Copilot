@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { AIProviderConfig } from '../services/ai'
-import { getProviderDefinition } from '../services/ai'
+import { getProviderDefinition, testAIProviderConnection } from '../services/ai'
 import { getAIProviderConfig, saveAIProviderConfig } from '../services/storage'
 import ProviderSettingsForm from './components/ProviderSettingsForm'
 import type { SaveStatusValue } from './components/SaveStatus'
@@ -18,6 +18,7 @@ function Options() {
   const [config, setConfig] = useState<AIProviderConfig>(defaultConfig)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [isTesting, setIsTesting] = useState(false)
   const [isApiKeyVisible, setIsApiKeyVisible] = useState(false)
   const [saveStatus, setSaveStatus] = useState<SaveStatusValue>('idle')
   const [statusMessage, setStatusMessage] = useState<string>()
@@ -68,6 +69,18 @@ function Options() {
     }
   }
 
+  async function handleTestConnection() {
+    setIsTesting(true)
+    setSaveStatus('testing')
+    setStatusMessage('Testing connection...')
+
+    const result = await testAIProviderConnection(config)
+
+    setSaveStatus(result.success ? 'saved' : 'error')
+    setStatusMessage(result.message)
+    setIsTesting(false)
+  }
+
   return (
     <main className="options-shell">
       <header>
@@ -86,6 +99,7 @@ function Options() {
             config={config}
             isApiKeyVisible={isApiKeyVisible}
             isSaving={isSaving}
+            isTesting={isTesting}
             saveStatus={saveStatus}
             statusMessage={statusMessage}
             onChange={(nextConfig) => {
@@ -94,6 +108,7 @@ function Options() {
               setStatusMessage(undefined)
             }}
             onSubmit={handleSave}
+            onTestConnection={handleTestConnection}
             onClearApiKey={() => setConfig({ ...config, apiKey: '' })}
             onToggleApiKeyVisible={() => setIsApiKeyVisible((visible) => !visible)}
           />

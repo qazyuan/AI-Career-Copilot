@@ -1,4 +1,4 @@
-export type SaveStatusValue = 'idle' | 'saved' | 'error'
+export type SaveStatusValue = 'idle' | 'saved' | 'testing' | 'error'
 
 interface SaveStatusProps {
   status: SaveStatusValue
@@ -12,7 +12,8 @@ function SaveStatus({ status, message }: SaveStatusProps) {
 
   return (
     <p className={`save-status save-status-${status}`}>
-      {message ?? (status === 'saved' ? 'Settings saved.' : 'Unable to save settings.')}
+      {message ??
+        (status === 'saved' ? 'Settings saved.' : 'Unable to save settings.')}
     </p>
   )
 }

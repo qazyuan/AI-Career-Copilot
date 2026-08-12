@@ -11,10 +11,12 @@ interface ProviderSettingsFormProps {
   config: AIProviderConfig
   isApiKeyVisible: boolean
   isSaving: boolean
+  isTesting: boolean
   saveStatus: SaveStatusValue
   statusMessage?: string
   onChange: (config: AIProviderConfig) => void
   onSubmit: () => void
+  onTestConnection: () => void
   onClearApiKey: () => void
   onToggleApiKeyVisible: () => void
 }
@@ -23,10 +25,12 @@ function ProviderSettingsForm({
   config,
   isApiKeyVisible,
   isSaving,
+  isTesting,
   saveStatus,
   statusMessage,
   onChange,
   onSubmit,
+  onTestConnection,
   onClearApiKey,
   onToggleApiKeyVisible,
 }: ProviderSettingsFormProps) {
@@ -83,6 +87,14 @@ function ProviderSettingsForm({
       <div className="form-actions">
         <button type="submit" className="primary-button" disabled={isSaving}>
           {isSaving ? 'Saving...' : 'Save settings'}
+        </button>
+        <button
+          type="button"
+          className="secondary-button"
+          disabled={isTesting}
+          onClick={onTestConnection}
+        >
+          {isTesting ? 'Testing...' : 'Test connection'}
         </button>
         <SaveStatus status={saveStatus} message={statusMessage} />
       </div>

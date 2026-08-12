@@ -23,6 +23,7 @@ export interface AIChatRequest {
   messages: AIChatMessage[]
   model?: string
   temperature?: number
+  maxTokens?: number
 }
 
 export interface AIChatResponse {

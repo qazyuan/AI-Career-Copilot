@@ -179,6 +179,10 @@ button:disabled {
   color: #b91c1c;
 }
 
+.save-status-testing {
+  color: #2563eb;
+}
+
 .loading-state {
   border-radius: 6px;
   background: #f8fafc;
