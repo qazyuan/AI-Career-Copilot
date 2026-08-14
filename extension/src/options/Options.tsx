@@ -1,8 +1,23 @@
 import { useEffect, useState } from 'react'
+import { JobAnalyzerAgent, ResumeAgent } from '../agents'
+import type { JobAnalyzerResult, ResumeProfile } from '../agents'
 import type { AIProviderConfig } from '../services/ai'
-import { getProviderDefinition, testAIProviderConnection } from '../services/ai'
-import { getAIProviderConfig, saveAIProviderConfig } from '../services/storage'
+import {
+  createAIProvider,
+  getProviderDefinition,
+  testAIProviderConnection,
+} from '../services/ai'
+import type { ParsedResumeText } from '../services/resumePdf'
+import { extractTextFromPdf } from '../services/resumePdf'
+import {
+  getAIProviderConfig,
+  getResumeProfile,
+  saveAIProviderConfig,
+  saveResumeProfile,
+} from '../services/storage'
+import JobAnalyzerTestPanel from './components/JobAnalyzerTestPanel'
 import ProviderSettingsForm from './components/ProviderSettingsForm'
+import ResumePdfTextPanel from './components/ResumePdfTextPanel'
 import type { SaveStatusValue } from './components/SaveStatus'
 
 const defaultProvider = getProviderDefinition('deepseek')
@@ -22,6 +37,16 @@ function Options() {
   const [isApiKeyVisible, setIsApiKeyVisible] = useState(false)
   const [saveStatus, setSaveStatus] = useState<SaveStatusValue>('idle')
   const [statusMessage, setStatusMessage] = useState<string>()
+  const [jdText, setJdText] = useState('')
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [jobAnalyzerResult, setJobAnalyzerResult] =
+    useState<JobAnalyzerResult>()
+  const [jobAnalyzerError, setJobAnalyzerError] = useState<string>()
+  const [parsedResume, setParsedResume] = useState<ParsedResumeText>()
+  const [isExtractingResumePdf, setIsExtractingResumePdf] = useState(false)
+  const [isAnalyzingResume, setIsAnalyzingResume] = useState(false)
+  const [resumePdfError, setResumePdfError] = useState<string>()
+  const [resumeProfile, setResumeProfile] = useState<ResumeProfile>()
 
   useEffect(() => {
     let isMounted = true
@@ -32,6 +57,12 @@ function Options() {
 
         if (isMounted && savedConfig) {
           setConfig(savedConfig)
+        }
+
+        const savedResumeProfile = await getResumeProfile()
+
+        if (isMounted && savedResumeProfile) {
+          setResumeProfile(savedResumeProfile)
         }
       } catch {
         if (isMounted) {
@@ -81,6 +112,74 @@ function Options() {
     setIsTesting(false)
   }
 
+  async function handleAnalyzeJob() {
+    setIsAnalyzing(true)
+    setJobAnalyzerResult(undefined)
+    setJobAnalyzerError(undefined)
+
+    try {
+      const provider = createAIProvider(config)
+      const agent = new JobAnalyzerAgent(provider)
+      const output = await agent.analyze({ jdText })
+
+      setJobAnalyzerResult(output.result)
+    } catch (error) {
+      setJobAnalyzerError(
+        error instanceof Error
+          ? error.message
+          : 'Unable to analyze this job description.',
+      )
+    } finally {
+      setIsAnalyzing(false)
+    }
+  }
+
+  async function handleResumePdfSelect(file: File) {
+    setIsExtractingResumePdf(true)
+    setParsedResume(undefined)
+    setResumePdfError(undefined)
+
+    try {
+      const parsedText = await extractTextFromPdf(file)
+
+      setParsedResume(parsedText)
+      setResumeProfile(undefined)
+    } catch (error) {
+      setResumePdfError(
+        error instanceof Error
+          ? error.message
+          : 'Unable to extract text from this PDF.',
+      )
+    } finally {
+      setIsExtractingResumePdf(false)
+    }
+  }
+
+  async function handleAnalyzeResume() {
+    if (!parsedResume) {
+      setResumePdfError('Please upload and extract a PDF resume first.')
+      return
+    }
+
+    setIsAnalyzingResume(true)
+    setResumePdfError(undefined)
+
+    try {
+      const provider = createAIProvider(config)
+      const agent = new ResumeAgent(provider)
+      const output = await agent.analyze({ resumeText: parsedResume.text })
+
+      setResumeProfile(output.profile)
+      await saveResumeProfile(output.profile)
+    } catch (error) {
+      setResumePdfError(
+        error instanceof Error ? error.message : 'Unable to analyze this resume.',
+      )
+    } finally {
+      setIsAnalyzingResume(false)
+    }
+  }
+
   return (
     <main className="options-shell">
       <header>
@@ -114,6 +213,33 @@ function Options() {
           />
         )}
       </section>
+      {!isLoading ? (
+        <JobAnalyzerTestPanel
+          jdText={jdText}
+          result={jobAnalyzerResult}
+          errorMessage={jobAnalyzerError}
+          isAnalyzing={isAnalyzing}
+          onJdTextChange={(nextJdText) => {
+            setJdText(nextJdText)
+            setJobAnalyzerError(undefined)
+          }}
+          onAnalyze={handleAnalyzeJob}
+        />
+      ) : null}
+      <ResumePdfTextPanel
+        parsedResume={parsedResume}
+        resumeProfile={resumeProfile}
+        errorMessage={resumePdfError}
+        isExtracting={isExtractingResumePdf}
+        isAnalyzing={isAnalyzingResume}
+        onFileSelect={handleResumePdfSelect}
+        onAnalyze={handleAnalyzeResume}
+        onClear={() => {
+          setParsedResume(undefined)
+          setResumeProfile(undefined)
+          setResumePdfError(undefined)
+        }}
+      />
     </main>
   )
 }

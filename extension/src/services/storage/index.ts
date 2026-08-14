@@ -5,3 +5,8 @@ export {
   getAIProviderConfig,
   saveAIProviderConfig,
 } from './aiConfigStorage'
+export {
+  getResumeProfile,
+  RESUME_PROFILE_STORAGE_KEY,
+  saveResumeProfile,
+} from './resumeProfileStorage'

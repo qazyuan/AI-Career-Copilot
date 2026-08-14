@@ -1,0 +1,32 @@
+{
+  "id": "16839cb7-b8d0-41f6-ada2-5991b5188920",
+  "object": "chat.completion",
+  "created": 1786545920,
+  "model": "deepseek-v4-flash",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "We need answer JSON only. Need parse JD. Need infer Chinese. Need schema. Let's carefully map.\n\nJob title: 资深前端开发工程师50-70K → title maybe \"资深前端开发工程师\" or includes salary? Title field likely \"资深前端开发工程师\". Company unknown. Location \"上海\". WorkMode onsite? Since location given not remote. Could be onsite. But \"unknown\"? Need infer from JD? WorkMode \"onsite\" maybe because no mention hybrid/remote, and location specified. Schema options onsite/hybrid/remote/unknown. I think onsite likely. Seniority \"senior\" because 资深 and 5-10年. Summary: summarize JD in English? Could be string. Need maybe concise: \"Develop high-performance, scalable web interfaces using modern Web standards and frameworks; evaluate technical impact; ensure reliability of web apps and operational tools; deliver high-quality frontend code.\" But field summary from job description. Could be in Chinese? The schema string no language. We can provide English or Chinese. Since JD Chinese, but schema fields English. Better provide Chinese summary? But \"summary\" likely natural language summary. Could be \"负责根据产品与设计需求，使用最新Web标准与框架实现高性能、可扩展用户界面；进行技术评估；保障Web应用可靠性并推动优化；开发测试调试Web产品；与干系人协作并独立交付Web解决方案。\"\n\nResponsibilities list from 职位描述 bullet points. Need parse each sentence:\n- 根据产品与设计需求，使用最新Web标准与框架，实现高性能、可扩展的用户界面。\n- 对产品与技术相关的各类项目进行技术评估与影响分析。\n- 保障Web应用及运营工具的可靠性，并推动持续优化。\n- 开发、测试与调试Web产品，产出高质量前端代码。\n- 在与相关干系人紧密协作的同时，能够独立交付Web解决方案。\n\nRequiredQualifications from 任职要求:\n- 计算机科学、工程或相关专业本科及以上学历。 (Actually education requirement)\n- 3年以上软件工程经验，尤其在前端开发方向。\n- 熟练掌握React、JavaScript、TypeScript、HTML和CSS。\n- 深入理解JavaScript Promise及异步编程。\n- 具备良好的沟通能力，能够向非技术背景的干系人解释技术概念。\n- 对行业趋势和新兴技术保持持续学习的热情\n- 英语能作为工作语言\n\nPreferred qualifications:\n- 有React Native或其他混合移动应用开发经验者优先。\n- 有Node.js及自动化方案构建经验者优先。\n\nTechnicalSkills: list from required and preferred? Schema separate technicalSkills and toolsAndPlatforms. Need include tech skills: React, JavaScript, TypeScript, HTML, CSS, Promise, async programming, React Native, Node.js. Maybe \"Web standards\". Could include \"Redux\"? Not mentioned. ToolsAndPlatforms: Node.js? \"自动化方案\" unspecified. Maybe \"React Native\", \"Node.js\" are tools/platforms? Need decide. TechnicalSkills could include programming languages/frameworks/libraries: React, JavaScript, TypeScript, HTML, CSS, Promise, React Native, Node.js. ToolsAndPlatforms maybe \"Git\"? Not mentioned. Could be [] because no explicit tools. But \"Node.js及自动化方案构建经验\" Node.js is a platform/runtime, but also technical skill. We can put Node.js in technicalSkills. ToolsAndPlatforms maybe [] or include \"Node.js\"? Schema distinguishes. Hmm.\n\n\"toolsAndPlatforms\": [\"Node.js\", \"React Native\"]? But React Native is framework/platform. Yet also technical skills. Need avoid duplication? It's okay.\n\nDomainKeywords: maybe \"Web应用\", \"前端开发\", \"混合移动应用\", \"自动化方案\", \"运营工具\", \"高性能用户界面\". Domain keywords from JD. Could include \"Web\", \"frontend\", \"mobile hybrid\", \"automation\". Need output array strings.\n\nUncertainties: Any ambiguous/missing info. Example \"公司名称未在职位描述中提供\", \"具体薪资结构/福利未说明\", \"工作模式未明确说明，根据地点推断为onsite\", \"React Native/Node.js为优先条件而非必须\". Need include uncertainties? The field should list uncertainties. Need be careful not to invent. We can list:\n- \"公司名称未提供\"\n- \"工作模式未明确说明，从地点判断可能为现场办公\"\n- \"薪资50-70K未明确为月薪还是年薪或币种\" but obvious 50-70K per month? Could state \"薪资范围50-70K，但未说明币种/周期\". In job title \"50-70K\" likely monthly. But no need.\n- \"英语能作为工作语言的具体等级未说明\"\n- \"Node.js及自动化方案构建经验为优先条件\"\n\nNeed ensure JSON valid. Use double quotes. No markdown. The first char \"{\" last \"}\". Let's construct.\n\nNeed decide workMode: \"onsite\". But if uncertain, maybe \"unknown\". The instruction says if missing use unknown. Is workMode missing? JD says location only. It doesn't explicitly say onsite. But for job posting, not remote implies onsite. However schema options include unknown. To avoid invent, maybe \"unknown\". But \"workMode\" can be inferred? \"only analyze job description\" and don't invent missing info. If not specified, use unknown. So workMode should be \"unknown\". But location \"上海\" maybe onsite? It's not workMode. I'd choose \"unknown\" because no mention of remote/hybrid/onsite. But the job title/description? No. The safest is unknown. However many JDs imply onsite by location. But schema asks workMode, if not stated, unknown. Let's set \"unknown\". Need maybe uncertainties mention \"工作模式未明确"
+      },
+      "logprobs": null,
+      "finish_reason": "length"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 564,
+    "completion_tokens": 1200,
+    "total_tokens": 1764,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1200
+    },
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 52
+  },
+  "system_fingerprint": "fp_a18b46594c_prod0820_fp8_kvcache_20260402"
+}

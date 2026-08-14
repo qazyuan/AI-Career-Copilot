@@ -14,18 +14,27 @@ export class OpenAICompatibleProvider implements AIProvider {
   async chat(request: AIChatRequest): Promise<AIChatResponse> {
     this.validateConfig()
 
+    const requestBody = {
+      model: request.model ?? this.config.model,
+      messages: request.messages,
+      temperature: request.temperature,
+      max_tokens: request.maxTokens,
+      response_format:
+        request.responseFormat === 'json_object'
+          ? { type: 'json_object' }
+          : undefined,
+      ...(this.config.provider === 'deepseek'
+        ? { thinking: { type: 'disabled' } }
+        : {}),
+    }
+
     const response = await fetch(buildChatCompletionsUrl(this.config.baseUrl), {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${this.config.apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: request.model ?? this.config.model,
-        messages: request.messages,
-        temperature: request.temperature,
-        max_tokens: request.maxTokens,
-      }),
+      body: JSON.stringify(requestBody),
     })
 
     const raw = await readJsonResponse(response)

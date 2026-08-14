@@ -24,6 +24,7 @@ export interface AIChatRequest {
   model?: string
   temperature?: number
   maxTokens?: number
+  responseFormat?: 'json_object'
 }
 
 export interface AIChatResponse {
