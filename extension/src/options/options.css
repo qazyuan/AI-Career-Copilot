@@ -221,6 +221,19 @@ button:disabled {
   padding-top: 20px;
 }
 
+.match-result {
+  display: grid;
+  gap: 18px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .resume-record-list {
   display: grid;
   gap: 12px;
@@ -305,6 +318,10 @@ button:disabled {
   }
 
   .job-result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .score-grid {
     grid-template-columns: 1fr;
   }
 }

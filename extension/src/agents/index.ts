@@ -5,6 +5,7 @@ export type AgentName =
   | 'interview'
 
 export { JobAnalyzerAgent } from './jobAnalyzer'
+export { MatchingAgent } from './matching'
 export { ResumeAgent } from './resume'
 export type {
   AnalyzeJobInput,
@@ -13,6 +14,24 @@ export type {
   JobSeniority,
   WorkMode,
 } from './jobAnalyzer'
+export type {
+  BlockingGap,
+  GapType,
+  JobMatchResult,
+  MatchEvidence,
+  MatchGap,
+  MatchJobInput,
+  MatchJobOutput,
+  MatchRisk,
+  MatchScoreBreakdown,
+  MatchScoreResult,
+  RecommendationLevel,
+  RequirementAssessment,
+  RequirementStatus,
+  Severity,
+  TransferableStrength,
+  TransferConfidence,
+} from './matching'
 export type {
   AnalyzeResumeInput,
   AnalyzeResumeOutput,

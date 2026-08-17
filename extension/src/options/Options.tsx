@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { JobAnalyzerAgent, ResumeAgent } from '../agents'
-import type { JobAnalyzerResult, ResumeProfile } from '../agents'
+import { JobAnalyzerAgent, MatchingAgent, ResumeAgent } from '../agents'
+import type { JobAnalyzerResult, JobMatchResult, ResumeProfile } from '../agents'
 import type { AIProviderConfig } from '../services/ai'
 import {
   createAIProvider,
@@ -16,6 +16,7 @@ import {
   saveResumeProfile,
 } from '../services/storage'
 import JobAnalyzerTestPanel from './components/JobAnalyzerTestPanel'
+import MatchingAgentTestPanel from './components/MatchingAgentTestPanel'
 import ProviderSettingsForm from './components/ProviderSettingsForm'
 import ResumePdfTextPanel from './components/ResumePdfTextPanel'
 import type { SaveStatusValue } from './components/SaveStatus'
@@ -47,6 +48,9 @@ function Options() {
   const [isAnalyzingResume, setIsAnalyzingResume] = useState(false)
   const [resumePdfError, setResumePdfError] = useState<string>()
   const [resumeProfile, setResumeProfile] = useState<ResumeProfile>()
+  const [isMatching, setIsMatching] = useState(false)
+  const [matchResult, setMatchResult] = useState<JobMatchResult>()
+  const [matchError, setMatchError] = useState<string>()
 
   useEffect(() => {
     let isMounted = true
@@ -123,6 +127,8 @@ function Options() {
       const output = await agent.analyze({ jdText })
 
       setJobAnalyzerResult(output.result)
+      setMatchResult(undefined)
+      setMatchError(undefined)
     } catch (error) {
       setJobAnalyzerError(
         error instanceof Error
@@ -170,6 +176,8 @@ function Options() {
       const output = await agent.analyze({ resumeText: parsedResume.text })
 
       setResumeProfile(output.profile)
+      setMatchResult(undefined)
+      setMatchError(undefined)
       await saveResumeProfile(output.profile)
     } catch (error) {
       setResumePdfError(
@@ -177,6 +185,34 @@ function Options() {
       )
     } finally {
       setIsAnalyzingResume(false)
+    }
+  }
+
+  async function handleAnalyzeMatch() {
+    if (!resumeProfile || !jobAnalyzerResult) {
+      setMatchError('Please analyze both a resume and a job description first.')
+      return
+    }
+
+    setIsMatching(true)
+    setMatchResult(undefined)
+    setMatchError(undefined)
+
+    try {
+      const provider = createAIProvider(config)
+      const agent = new MatchingAgent(provider)
+      const output = await agent.match({
+        resumeProfile,
+        jobAnalysis: jobAnalyzerResult,
+      })
+
+      setMatchResult(output.result)
+    } catch (error) {
+      setMatchError(
+        error instanceof Error ? error.message : 'Unable to analyze this match.',
+      )
+    } finally {
+      setIsMatching(false)
     }
   }
 
@@ -239,6 +275,14 @@ function Options() {
           setResumeProfile(undefined)
           setResumePdfError(undefined)
         }}
+      />
+      <MatchingAgentTestPanel
+        resumeProfile={resumeProfile}
+        jobAnalysis={jobAnalyzerResult}
+        matchResult={matchResult}
+        errorMessage={matchError}
+        isMatching={isMatching}
+        onAnalyzeMatch={handleAnalyzeMatch}
       />
     </main>
   )
